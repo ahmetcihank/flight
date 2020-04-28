@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  docker-mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: flightticket
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "8080:8080"
+    networks:
+      - mysql-network
+
+  app:
+    image: flightticket
+    ports:
+       - "6060:6060"
+    depends_on:
+       - docker-mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://docker-mysql:3306/flightticket?useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - mysql-network
+
+networks:
+  mysql-network:
